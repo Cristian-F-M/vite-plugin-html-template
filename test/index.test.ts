@@ -236,4 +236,27 @@ describe('HTML template vite plugin', () => {
 		</template>
 `)
 	})
+
+	it('Replace a simple template [changging tag to <x-component>]', async () => {
+		const html = `
+		<x-component data-template-id="foo"></x-component> 
+		<template id="foo">
+			<span></span>
+		</template>
+		`
+
+		const output = await runOnViteServer(
+			async (server) => {
+				return await server.transformIndexHtml('/', html)
+			},
+			{ tag: 'x-component' }
+		)
+
+		expect(output).toContainHTML(`
+			<span></span>
+			<template id="foo">
+				<span></span>
+			</template>
+`)
+	})
 })
