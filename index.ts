@@ -1,14 +1,29 @@
-import { load } from 'cheerio'
+import { type Cheerio, load } from 'cheerio'
+import type { Element } from 'domhandler'
 import type { Plugin } from 'vite'
-import { toMergeWithComma, toMergeWithSpaces } from '@/constants'
+import {
+	DEFAULT_OPTIONS,
+	toMergeWithComma,
+	toMergeWithSpaces
+} from '@/constants'
+import type { HTMLTemplateOptions } from '@/types/html-template'
 import {
 	dataAttrToDatasetKey,
 	mergeCommaSeparated,
 	mergeSpaceSeparated,
-	mergeStyle
+	mergeStyle,
+	mergeWithDefaults
 } from '@/utils/'
 
-export default function htmlTemplate(): Plugin {
+export type { HTMLTemplateOptions } from '@/types/html-template'
+
+export default function htmlTemplate(
+	options: HTMLTemplateOptions = DEFAULT_OPTIONS
+): Plugin {
+	const mergedOptions = mergeWithDefaults(DEFAULT_OPTIONS, options)
+
+	const { tag } = mergedOptions
+
 	return {
 		name: 'html-template',
 		enforce: 'pre',
@@ -16,7 +31,7 @@ export default function htmlTemplate(): Plugin {
 			const $ = load(code)
 			const propsAdded: Set<string> = new Set()
 
-			$('x-template').each((_, t) => {
+			;($(tag) as Cheerio<Element>).each((_, t) => {
 				const xTemplate = $(t)
 				const attrs = t.attribs
 				const dataset = dataAttrToDatasetKey(t.attributes)
@@ -24,7 +39,7 @@ export default function htmlTemplate(): Plugin {
 
 				if (!attrs || !templateId)
 					throw new Error(
-						`Each x-template must have a data-template-id attribute with template id`
+						`Each ${tag} must have a data-template-id attribute with template id`
 					)
 
 				const template = $(`template#${templateId}`).clone()
