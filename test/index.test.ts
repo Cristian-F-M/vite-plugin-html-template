@@ -3,13 +3,15 @@
 import { createServer, type ViteDevServer } from 'vite'
 import { describe, expect, it } from 'vitest'
 import htmlTemplate from '../index'
+import type { HTMLTemplateOptions } from '../types/html-template'
 
 async function runOnViteServer(
-	fn: (server: ViteDevServer) => Promise<unknown> | unknown
+	fn: (server: ViteDevServer) => Promise<unknown> | unknown,
+	pluginOptions?: HTMLTemplateOptions
 ) {
 	const server = await createServer({
 		configFile: false,
-		plugins: [htmlTemplate()]
+		plugins: [htmlTemplate(pluginOptions)]
 	})
 
 	const result = await fn(server)
