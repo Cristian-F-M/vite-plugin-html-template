@@ -73,3 +73,15 @@ export function mergeStyle(...styles: (string | undefined)[]) {
 		.map(([k, v]) => `${k}: ${v}`)
 		.join('; ')};`
 }
+
+export function mergeWithDefaults<T extends Record<string, unknown>>(
+	defaults: T,
+	user: Partial<T> = {}
+): T {
+	const result = {} as T
+	for (const key of Object.keys(defaults) as (keyof T)[]) {
+		const userValue = user[key]
+		result[key] = userValue ?? defaults[key]
+	}
+	return result
+}
