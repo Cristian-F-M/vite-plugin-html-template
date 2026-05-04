@@ -1,0 +1,44 @@
+{
+	"name": "@cmorales_/vite-plugin-html-template",
+	"module": "dist/main.js",
+	"main": "dist/main.js",
+	"version": "1.0.0",
+	"type": "module",
+	"private": false,
+	"description": "`@cmorales_/vite-plugin-html-template` is a plugin for vite and mainly for 'Vanilla' (without specific framework, like React.js, Vue, Svelte, ...), with witch you can define within the `<template>` tag as a component, then you can use the `<x-template>` tag (customizable) and also add HTML attributes (class, data-*, style, aria-*)",
+	"license": "MIT",
+	"repository": {
+		"type": "github",
+		"url": "https://github.com/Cristian-F-M/vite-plugin-html-template"
+	},
+	"author": {
+		"name": "Cristian Morales",
+		"email": "cfmorales.diaz@gmail.com",
+		"url": "https://cmorales.work"
+	},
+	"keywords": [],
+	"scripts": {
+		"build": "tsup index.ts --format esm,cjs --dts --clean --minify --splitting false",
+		"test": "vitest"
+	},
+	"files": [
+		"dist",
+		"package.json",
+		"README.md",
+		"LICENSE"
+	],
+	"devDependencies": {
+		"@biomejs/biome": "2.4.13",
+		"@types/bun": "1.3.13",
+		"tsup": "8.5.1",
+		"typescript": "6.0.3",
+		"vite": "8.0.10",
+		"vitest": "4.1.5"
+	},
+	"peerDependencies": {
+		"vite": "^8.0.10"
+	},
+	"dependencies": {
+		"cheerio": "1.2.0"
+	}
+}
