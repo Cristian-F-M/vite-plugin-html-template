@@ -9,7 +9,7 @@
 	"license": "MIT",
 	"repository": {
 		"type": "github",
-		"url": "https://github.com/Cristian-F-M/vite-plugin-html-template"
+		"url": "git+https://github.com/Cristian-F-M/vite-plugin-html-template.git"
 	},
 	"author": {
 		"name": "Cristian Morales",
