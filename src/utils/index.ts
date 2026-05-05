@@ -34,7 +34,7 @@ export function dataAttrToDatasetKey(attrs: Element['attributes']) {
 }
 
 export function mergeSpaceSeparated(...attrs: (string | undefined)[]) {
-	const set = new Set(attrs.map((a) => a?.split(/\s+/).filter(Boolean)))
+	const set = new Set(attrs.map((a) => a?.split(/\s+/).filter(Boolean)).flat())
 	return [...set].join(' ')
 }
 
