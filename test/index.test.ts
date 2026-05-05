@@ -259,4 +259,30 @@ describe('HTML template vite plugin', () => {
 			</template>
 `)
 	})
+
+	it('Replace a template with children ', async () => {
+		const html = `
+		<x-template data-template-id="foo">
+			<svg></svg>
+			<span>Press it</span>
+		</x-template> 
+		<template id="foo">
+			<button type="button">{children}</button>
+		</template>
+		`
+
+		const output = await runOnViteServer(async (server) => {
+			return await server.transformIndexHtml('/', html)
+		})
+
+		expect(output).toContainHTML(`
+		<button type="button">
+			<svg></svg>
+			<span>Press it</span>
+		</button>
+		<template id="foo">
+			<button type="button">{children}</button>
+		</template>
+`)
+	})
 })

@@ -113,6 +113,19 @@ export default function htmlTemplate(
 					templateChild.attr(rawName, value)
 				}
 
+				if (template.html()?.includes('{children}')) {
+					let htmlTemplate = template.html() ?? ''
+
+					if (xTemplate.html()) {
+						htmlTemplate = htmlTemplate.replaceAll(
+							'{children}',
+							// biome-ignore lint/style/noNonNullAssertion: It is inside a if block
+							xTemplate.html()!
+						)
+					}
+					template.html(htmlTemplate)
+				}
+
 				// biome-ignore lint/style/noNonNullAssertion: It is inside a if block
 				if (template.html()) $(xTemplate).replaceWith(template.html()!)
 			})
