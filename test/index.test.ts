@@ -177,7 +177,7 @@ describe('HTML template vite plugin', () => {
 	<x-template data-template-id="primary-button-template" data-text="Another button"></x-template>
 
 	<template id="primary-button-template">
-		<button class="primary-button" type="button">{text}</button>
+		<button class="primary-button another-class" type="button">{text}</button>
 	</template>
 		`
 
@@ -186,11 +186,11 @@ describe('HTML template vite plugin', () => {
 		})
 
 		expect(output).toContainHTML(`
-			<button class="primary-button disabled-button" type="button">Press it</button>
-			<button class="primary-button" type="button">Another button</button>
+			<button class="primary-button another-class disabled-button" type="button">Press it</button>
+			<button class="primary-button another-class" type="button">Another button</button>
 				
 			<template id="primary-button-template">
-				<button class="primary-button" type="button">{text}</button>
+				<button class="primary-button another-class" type="button">{text}</button>
 			</template>
 `)
 	})
