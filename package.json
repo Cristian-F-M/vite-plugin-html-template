@@ -16,7 +16,7 @@
 		"email": "cfmorales.diaz@gmail.com",
 		"url": "https://cmorales.work"
 	},
-	"keywords": [],
+	"keywords": ["vite", "html", "plugin", "template", "cmorales", "vanilla vite", "component"],
 	"scripts": {
 		"build": "tsup index.ts --format esm,cjs --dts --clean --minify --splitting false",
 		"test": "vitest"
