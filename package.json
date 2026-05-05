@@ -19,7 +19,11 @@
 	"keywords": ["vite", "html", "plugin", "template", "cmorales", "vanilla vite", "component"],
 	"scripts": {
 		"build": "tsup index.ts --format esm,cjs --dts --clean --minify --splitting false",
-		"test": "vitest"
+		"test": "vitest",
+		"release:patch": "node scripts/release.ts --patch",
+		"release:minor": "node scripts/release.ts --minor" ,
+		"release:major": "node scripts/release.ts --major",
+		"release": "node scripts/release.ts"
 	},
 	"files": [
 		"dist",
