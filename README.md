@@ -1,6 +1,6 @@
 # @cmorales_/vite-plugin-html-template
 
-`@cmorales_/vite-plugin-html-template` is a plugin for vite and mainly for 'Vanilla' (without specific framework, like React.js, Vue, Svelte, ...), with witch you can define within the `<template>` tag as a component, then you can use the `<x-template>` tag (customizable) and also add HTML attributes (class, data-\*, style, aria-\*)
+`@cmorales_/vite-plugin-html-template` is a plugin for vite and mainly for 'Vanilla' (without specific framework, like React.js, Vue, Svelte, ...), with which you can define within the `<template>` tag as a component, then you can use the `<x-template>` tag (customizable) and also add HTML attributes (class, data-\*, style, aria-\*)
 
 
 ## Installation
@@ -33,7 +33,7 @@ export default defineConfig({
 		<div class="..." ...other-attributes></div>
 	 </template>
 ```
-2. Use the templace with the `<x-template>` tag.
+2. Use the template with the `<x-template>` tag.
 > [!WARNING]
 > You need add the `data-template-id` attribute to the `<x-template>` element referencing the same id as the `<template>` element to be used. 
 ```html
@@ -42,12 +42,12 @@ export default defineConfig({
 3. Complete and working example
 ```html
 
-<!-- You can use it multiples veces -->
+<!-- You can use it multiple times -->
 <x-template data-template-id="primary-button-template" class="disabled-button" data-text="Press it"></x-template>
 <x-template data-template-id="primary-button-template" data-text="Another button"></x-template>
 
 
-<!-- You can add attributes to elemente inside of template element  -->
+<!-- You can add attributes to element within template element  -->
 <template id="primary-button-template">
 		<button class="primary-button" type="button">{text}</button>
 </template>
@@ -136,10 +136,9 @@ You can pass any valid HTML attribute:
 
 
 ## Plugin options
-| prop | description                                                                    | default    |
-| ---- | ------------------------------------------------------------------------------ | ---------- |
-| tag  | Se utilizara para renderizar el componente dentro del la etiqueta `<template>` | x-template |  |
-
+| Option | Type   | Description                                                                 | Default        |
+| ------ | ------ | --------------------------------------------------------------------------- | -------------- |
+| tag    | string | Custom tag name used to render template instances instead of `<x-template>` | `"x-template"` |
 
 ## About the Author
 
