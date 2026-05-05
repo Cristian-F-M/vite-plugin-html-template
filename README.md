@@ -63,6 +63,10 @@ export default defineConfig({
 </template>
 ```
 
+## Plugin options
+| prop | description                                                                    | default    |
+| ---- | ------------------------------------------------------------------------------ | ---------- |
+| tag  | Se utilizara para renderizar el componente dentro del la etiqueta `<template>` | x-template |  |
 
 
 ## About the Author
