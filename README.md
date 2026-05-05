@@ -63,6 +63,78 @@ export default defineConfig({
 </template>
 ```
 
+## API
+
+### Template placeholders
+
+You can inject dynamic values into your templates using placeholders.
+
+To define a placeholder, use curly braces inside the template:
+
+```html
+<template id="card">
+  <div class="card">
+    <h2>{title}</h2>
+    <p>{description}</p>
+  </div>
+</template>
+```
+
+Then, pass values using data-* attributes in `<x-template>`:
+
+```html
+<x-template 
+  data-template-id="card"
+  data-title="Hello world"
+  data-description="This is a description"
+></x-template>
+```
+
+Result
+
+```html
+<div class="card">
+  <h2>Hello world</h2>
+  <p>This is a description</p>
+</div>
+```
+
+
+### Attribute merging
+
+Attributes passed to `<x-template>` are merged into the root element of the template.
+
+```html
+<x-template 
+  data-template-id="card"
+  class="highlight"
+  style="color:red;"
+></x-template>
+```
+
+Result 
+
+```html
+<div class="card highlight" style="color:red;">
+```
+
+
+### Supported attributes
+
+You can pass any valid HTML attribute:
+
+- `class`
+- `style`
+- `data-*`
+- `aria-*`
+- `etc.`
+
+
+> [!NOTE]
+> - Placeholder names must match the data-* attributes without the data- prefix.
+> - If a placeholder is not provided, it will remain unchanged.
+
+
 ## Plugin options
 | prop | description                                                                    | default    |
 | ---- | ------------------------------------------------------------------------------ | ---------- |
