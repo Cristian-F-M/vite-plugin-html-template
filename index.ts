@@ -28,7 +28,7 @@ export default function htmlTemplate(
 		name: 'html-template',
 		enforce: 'pre',
 		transformIndexHtml(code) {
-			const $ = load(code)
+			const $ = load(code, null, false)
 			const propsAdded: Set<string> = new Set()
 
 			;($(tag) as Cheerio<Element>).each((_, t) => {
