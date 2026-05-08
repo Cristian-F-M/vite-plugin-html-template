@@ -46,7 +46,7 @@ export default function htmlTemplate(
 
 				if (!template?.length)
 					throw new Error(
-						`There is not template elemente with id ${templateId}\n (<template id="foo">...</template>)`
+						`There is not template element with id ${templateId}\n (<template id="foo">...</template>)`
 					)
 
 				if (template?.length > 1) {
