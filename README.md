@@ -183,6 +183,39 @@ You can pass any valid HTML attribute:
 | ------ | ------ | --------------------------------------------------------------------------- | -------------- |
 | tag    | string | Custom tag name used to render template instances instead of `<x-template>` | `"x-template"` |
 
+
+
+# Contributing
+> [!NOTE]
+> You need to have installed [NodeJS](https://nodejs.org/en)
+
+1. Clone the repository 
+```bash
+git clone https://github.com/Cristian-F-M/vite-plugin-html-template.git
+```
+2. Install dependencies 
+
+```bash
+npm install
+# or bun install or pnpm install or ...
+```
+
+3. Run test while you are codding 
+```bash
+npm run test
+# or bun run test or pnpm run test or ...
+```
+> [!NOTE]
+> 1. You can add more test if your new features need it
+> 2. Ensure you pass all test before create a pull request 
+> 3. Change the version in package.json file according to the changes (major, minor, patch)
+> ```bash
+> npm version patch # minor or major	
+> # bun pm version patch # minor or major
+> # ...
+> ```
+
+
 ## About the Author
 
 Created by **Cristian Morales**.
