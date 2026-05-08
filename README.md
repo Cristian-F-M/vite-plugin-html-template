@@ -200,7 +200,7 @@ npm install
 # or bun install or pnpm install or ...
 ```
 
-3. Run test while you are codding 
+3. Run test while you are coding 
 ```bash
 npm run test
 # or bun run test or pnpm run test or ...
