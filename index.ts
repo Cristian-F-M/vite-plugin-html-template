@@ -56,6 +56,7 @@ export default function htmlTemplate(
 				}
 
 				for (const [_, attr] of Object.entries(dataset)) {
+					const html = template.clone().html()
 					const { name, rawName, value } = attr
 					if (!rawName.startsWith('data-') || rawName === 'data-template-id')
 						continue
@@ -63,33 +64,34 @@ export default function htmlTemplate(
 					const camelKey = name
 					const kebabKey = rawName.slice(5)
 
-					const matchResult = (template.html() ?? '').matchAll(
-						new RegExp(`{${camelKey}|{${kebabKey}`, 'g')
+					const matchResult = (html ?? '').matchAll(
+						new RegExp(`{${camelKey}}|{${kebabKey}}`, 'g')
 					)
 
 					if (matchResult.toArray().length > 0) {
 						propsAdded.add(rawName)
 					}
 
-					const templateHTML = template.html() ?? ''
+					const templateHTML = html ?? ''
+
 					const newTemplateHTML = templateHTML.replaceAll(
 						new RegExp(`{${camelKey}}|{${kebabKey}}`, 'g'),
 						value
 					)
 
-					template.html(newTemplateHTML)
+					template.contents().html(newTemplateHTML)
 				}
 
-				const templateChild = template.contents()
+				const templateChild = template.contents().children().first()
 
 				const setAttributes = (attr: string, value: string) =>
-					template.children().first().attr(attr, value)
+					templateChild.attr(attr, value)
 
 				for (const [rawName, value] of Object.entries(attrs)) {
 					if (propsAdded.has(rawName) || rawName === 'data-template-id')
 						continue
 
-					const prevAttrs = template.find('*').attr(rawName)
+					const prevAttrs = templateChild.attr(rawName)
 
 					if (toMergeWithSpaces.includes(rawName)) {
 						setAttributes(rawName, mergeSpaceSeparated(prevAttrs, value))
@@ -102,11 +104,7 @@ export default function htmlTemplate(
 					}
 
 					if (rawName === 'style') {
-						const prevAttrs = template.contents().find('*').attr(rawName)
-						template
-							.contents()
-							.find('*')
-							.attr(rawName, mergeStyle(prevAttrs, value))
+						templateChild.attr(rawName, mergeStyle(prevAttrs, value))
 						continue
 					}
 
