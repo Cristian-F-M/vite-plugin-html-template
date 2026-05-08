@@ -119,6 +119,49 @@ Result
 ```
 
 
+### Children Slot
+You can use the special placeholder `{children}`
+
+```html
+<x-template data-template-id="foo">
+	<div> <!-- some children --> </div>
+</x-template>
+
+<template id="foo">
+	<header>{children}</header>
+</template>
+```
+
+Result 
+```html
+<header>
+	<div> <!-- some children --> </div>
+</header>
+```
+
+### You can add html from a custom placeholder
+```html
+<!-- You can use any html element -->
+<x-template data-template-id="foo" data-text="Open Web" data-icon="<svg>...</svg>" ></x-template>
+
+
+<template id="foo">
+	<button type="button">
+		{icon}
+		<span>{text}</span>
+	</button>
+</template>
+```
+
+Result 
+```html
+<button>
+	<svg>...</svg>
+	<span>Open Web</span>
+</button>
+```
+
+
 ### Supported attributes
 
 You can pass any valid HTML attribute:
