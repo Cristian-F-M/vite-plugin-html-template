@@ -49,6 +49,12 @@ export default function htmlTemplate(
 						`There is not template elemente with id ${templateId}\n (<template id="foo">...</template>)`
 					)
 
+				if (template?.length > 1) {
+					throw new Error(
+						`There are ${template?.length} template elements with the same id (${templateId})\nEnsure you have each template element with an unique id`
+					)
+				}
+
 				if (!template.contents().children().length) {
 					throw new Error(
 						`Template <template id="${templateId}"></template> does not have at least one child`
