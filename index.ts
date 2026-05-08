@@ -63,10 +63,12 @@ export default function htmlTemplate(
 
 					const camelKey = name
 					const kebabKey = rawName.slice(5)
-
-					const matchResult = (html ?? '').matchAll(
-						new RegExp(`{${camelKey}}|{${kebabKey}}`, 'g')
+					const placeholderRegex = new RegExp(
+						`{${camelKey}}|{${kebabKey}}`,
+						'g'
 					)
+
+					const matchResult = (html ?? '').matchAll(placeholderRegex)
 
 					if (matchResult.toArray().length > 0) {
 						propsAdded.add(rawName)
@@ -75,7 +77,7 @@ export default function htmlTemplate(
 					const templateHTML = html ?? ''
 
 					const newTemplateHTML = templateHTML.replaceAll(
-						new RegExp(`{${camelKey}}|{${kebabKey}}`, 'g'),
+						placeholderRegex,
 						value
 					)
 
