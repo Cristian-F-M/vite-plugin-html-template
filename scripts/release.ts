@@ -14,6 +14,8 @@ try {
 	console.log('🏗️ Building project...')
 	execSync('npm run build', { stdio: 'inherit' })
 
+	execSync('npm whoami', { stdio: 'inherit' })
+
 	console.log(`📦 Bumping version (${versionType})...`)
 	execSync(`npm version ${versionType}`, { stdio: 'inherit' })
 
