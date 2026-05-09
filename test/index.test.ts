@@ -187,6 +187,37 @@ describe('HTML template vite plugin', () => {
 `)
 	})
 
+	it('Replace placeholder {variable} with data-* from x-template [kebabcase-keys & camelcase-keys] using "data-" prefix {data-variable-name | dataVariableName}', async () => {
+		const html = `
+		<x-template data-template-id="foo" data-main-title="Main title" data-sub-title="Subtitle" ></x-template> 
+		<template id="foo">
+			<div>
+				<h1>{data-main-title}</h1>
+				<h5>{dataSubTitle}</h5>
+			</div>
+		</template>
+		`
+
+		const output = await runOnViteServer(async (server) => {
+			return await server.transformIndexHtml('/', html)
+		})
+
+		expect(output).toContainHTML(`
+		<div>
+			<h1>Main title</h1>
+			<h5>Subtitle</h5>
+		</div>
+
+
+		<template id="foo">
+			<div>
+				<h1>{data-main-title}</h1>
+				<h5>{dataSubTitle}</h5>
+			</div>
+		</template>
+`)
+	})
+
 	it('Add class attribute from x-template to template child and merge them if x-template already has class attribute', async () => {
 		const html = `
 	<x-template data-template-id="primary-button-template" class="disabled-button" data-text="Press it"></x-template>
