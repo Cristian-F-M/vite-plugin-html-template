@@ -56,6 +56,22 @@ describe('HTML template vite plugin', () => {
 		})
 	})
 
+	it('It must be fails if there are more that one template element with the same id', async () => {
+		const html = `
+		<x-template data-template-id="foo"></x-template> 
+		<template id="foo">
+			<div></div>
+		</template>
+		<template id="foo">
+			<div></div>
+		</template>
+		`
+
+		await runOnViteServer(async (server) => {
+			await expect(server.transformIndexHtml('/', html)).rejects.toThrow()
+		})
+	})
+
 	it('Replace a simple template', async () => {
 		const html = `
 		<x-template data-template-id="foo"></x-template> 
