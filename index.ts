@@ -1,5 +1,4 @@
-import { type Cheerio, load } from 'cheerio'
-import type { Element } from 'domhandler'
+import { type HTMLElement, parse } from 'node-html-parser'
 import type { Plugin } from 'vite'
 import {
 	DEFAULT_OPTIONS,
@@ -8,7 +7,7 @@ import {
 } from '@/constants'
 import type { HTMLTemplateOptions } from '@/types/html-template'
 import {
-	dataAttrToDatasetKey,
+	kebabcaseToCamecase,
 	mergeCommaSeparated,
 	mergeSpaceSeparated,
 	mergeStyle,
@@ -28,115 +27,102 @@ export default function htmlTemplate(
 		name: 'html-template',
 		enforce: 'pre',
 		transformIndexHtml(code) {
-			const $ = load(code, null, false)
-			const propsAdded: Set<string> = new Set()
+			const root = parse(code)
+			const xTemplates = root.querySelectorAll(tag)
 
-			;($(tag) as Cheerio<Element>).each((_, t) => {
-				const xTemplate = $(t)
-				const attrs = t.attribs
-				const dataset = dataAttrToDatasetKey(t.attributes)
-				const templateId = attrs['data-template-id']
+			for (const xTemplate of xTemplates) {
+				const { attributes } = xTemplate
+				const templateId = attributes['data-template-id']
 
-				if (!attrs || !templateId)
+				const templates = root.querySelectorAll(`template#${templateId}`)
+
+				if (!templateId) {
 					throw new Error(
-						`Each ${tag} must have a data-template-id attribute with template id`
+						`Each ${tag} element must have a data-template-id attribute with template id`
 					)
+				}
 
-				const template = $(`template#${templateId}`).clone()
-
-				if (!template?.length)
+				if (!templates.length)
 					throw new Error(
 						`There is not template element with id ${templateId}\n (<template id="foo">...</template>)`
 					)
 
-				if (template?.length > 1) {
+				if (templates.length > 1) {
 					throw new Error(
-						`There are ${template?.length} template elements with the same id (${templateId})\nEnsure you have each template element with an unique id`
+						`There are ${templates.length} template elements with the same id (${templateId})\nEnsure you have each template element with an unique id`
 					)
 				}
 
-				if (!template.contents().children().length) {
+				// biome-ignore lint/style/noNonNullAssertion: It is after two conditions
+				const template = templates.at(0)!.clone() as HTMLElement
+				// biome-ignore lint/style/noNonNullAssertion: It is after conditions
+				const child = template.children[0]!
+
+				if (!template.children.length) {
 					throw new Error(
 						`Template <template id="${templateId}"></template> does not have at least one child`
 					)
 				}
 
-				for (const [_, attr] of Object.entries(dataset)) {
-					const html = template.clone().html()
-					const { name, rawName, value } = attr
-					if (!rawName.startsWith('data-') || rawName === 'data-template-id')
-						continue
-
-					const camelKey = name
-					const kebabKey = rawName.slice(5)
-					const placeholderRegex = new RegExp(
-						`{${camelKey}}|{${kebabKey}}`,
-						'g'
+				if (template.children.length > 1) {
+					throw new Error(
+						`Template <template id="${templateId}"></template> must have at most one child.`
 					)
-
-					const matchResult = (html ?? '').matchAll(placeholderRegex)
-
-					if (matchResult.toArray().length > 0) {
-						propsAdded.add(rawName)
-					}
-
-					const templateHTML = html ?? ''
-
-					const newTemplateHTML = templateHTML.replaceAll(
-						placeholderRegex,
-						value
-					)
-
-					template.contents().html(newTemplateHTML)
 				}
 
-				const templateChild = template.contents().children().first()
+				for (const [rawName, value] of Object.entries(attributes)) {
+					if (rawName === 'data-template-id') continue
 
-				const setAttributes = (attr: string, value: string) =>
-					templateChild.attr(attr, value)
+					const prevAttr = child.getAttribute(rawName)
+					let newAttr: string | null = null
 
-				for (const [rawName, value] of Object.entries(attrs)) {
-					if (propsAdded.has(rawName) || rawName === 'data-template-id')
-						continue
+					if (toMergeWithSpaces.includes(rawName))
+						newAttr = mergeSpaceSeparated(prevAttr, value)
 
-					const prevAttrs = templateChild.attr(rawName)
+					if (toMergeWithComma.includes(rawName))
+						newAttr = mergeCommaSeparated(prevAttr, value)
 
-					if (toMergeWithSpaces.includes(rawName)) {
-						setAttributes(rawName, mergeSpaceSeparated(prevAttrs, value))
-						continue
-					}
+					if (rawName === 'style') newAttr = mergeStyle(prevAttr, value)
 
-					if (toMergeWithComma.includes(rawName)) {
-						setAttributes(rawName, mergeCommaSeparated(prevAttrs, value))
+					if (newAttr) {
+						child.setAttribute(rawName, newAttr)
 						continue
 					}
 
-					if (rawName === 'style') {
-						templateChild.attr(rawName, mergeStyle(prevAttrs, value))
-						continue
-					}
+					const kebabName = rawName.slice('data-'.length)
 
-					templateChild.attr(rawName, value)
-				}
+					const rString = [rawName, kebabName]
+						.flatMap((name) => [name, kebabcaseToCamecase(name)])
+						.map((name) => `{${name}}`)
+						.join('|')
 
-				if (template.html()?.includes('{children}')) {
-					let htmlTemplate = template.html() ?? ''
+					const placeholderRegex = new RegExp(rString, 'g')
 
-					if (xTemplate.html()) {
-						htmlTemplate = htmlTemplate.replaceAll(
-							'{children}',
-							// biome-ignore lint/style/noNonNullAssertion: It is inside a if block
-							xTemplate.html()!
+					const matchResult = template.innerHTML.matchAll(placeholderRegex)
+					const areTherePlaceholders = matchResult.toArray().length > 0
+
+					if (areTherePlaceholders) {
+						template.innerHTML = template.innerHTML.replaceAll(
+							placeholderRegex,
+							value
 						)
+						continue
 					}
-					template.html(htmlTemplate)
+
+					child.setAttribute(rawName, value)
 				}
 
-				// biome-ignore lint/style/noNonNullAssertion: It is inside a if block
-				if (template.html()) $(xTemplate).replaceWith(template.html()!)
-			})
+				const childrenRegex = /{children}/g
 
-			return $.html()
+				template.innerHTML = template.innerHTML.replaceAll(
+					childrenRegex,
+					xTemplate.children.map((child) => child.outerHTML).join(' ')
+				)
+
+				xTemplate.replaceWith(template.innerHTML)
+			}
+
+			return root.outerHTML
 		}
 	}
 }
