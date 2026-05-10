@@ -11,15 +11,18 @@ expect.extend({
 				.trim()
 		}
 
-		const pass = cleanHTML(received).includes(cleanHTML(expected))
+		const receivedCleaned = cleanHTML(received)
+		const expectedCleaned = cleanHTML(expected)
+
+		const pass = receivedCleaned.includes(expectedCleaned)
 
 		if (pass) return { message: () => ``, pass: true }
 
 		return {
 			message: () => `Received HTML does not contains expected HTML`,
 			pass: false,
-			expected: expected,
-			actual: received
+			expected: expectedCleaned,
+			actual: receivedCleaned
 		}
 	}
 })
