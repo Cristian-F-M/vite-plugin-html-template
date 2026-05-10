@@ -85,3 +85,15 @@ export function mergeWithDefaults<T extends Record<string, unknown>>(
 	}
 	return result
 }
+
+export function kebabcaseToCamecase(text: string) {
+	return text
+		.split('-')
+		.map((t, i) => {
+			if (i === 0) return t
+
+			const text = `${t[0]?.toUpperCase()}${t.slice(1)}`
+			return text
+		})
+		.join('')
+}
