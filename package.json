@@ -2,7 +2,7 @@
 	"name": "@cmorales_/vite-plugin-html-template",
 	"module": "dist/index.js",
 	"main": "dist/index.js",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"type": "module",
 	"private": false,
 	"description": "`@cmorales_/vite-plugin-html-template` is a plugin for vite and mainly for 'Vanilla' (without specific framework, like React.js, Vue, Svelte, ...), with witch you can define within the `<template>` tag as a component, then you can use the `<x-template>` tag (customizable) and also add HTML attributes (class, data-*, style, aria-*)",
