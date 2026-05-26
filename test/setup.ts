@@ -14,7 +14,7 @@ expect.extend({
 			return html
 				.replace(/<head>[\s\S]*?<\/head>/gi, '')
 				.replace(/<script[\s\S]*?<\/script>/gi, '')
-				.replace(/\s+/g, ' ')
+				.replace(/\s+/g, '')
 				.replace(/>\s+</g, '><')
 				.trim()
 		}
@@ -35,8 +35,8 @@ expect.extend({
 		return {
 			message: () => `Expected received HTML to contain expected HTML`,
 			pass: false,
-			expected: formatHtml(expectedCleaned),
-			actual: formatHtml(receivedCleaned)
+			expected: expectedCleaned,
+			actual: receivedCleaned
 		}
 	}
 })
