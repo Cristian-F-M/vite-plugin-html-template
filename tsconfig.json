@@ -9,7 +9,8 @@
 		"moduleDetection": "force",
 		"allowJs": true,
 		"types": [
-			"bun"
+			"node",
+			"bun-types"
 		],
 		// Bundler mode
 		"moduleResolution": "bundler",
@@ -36,7 +37,8 @@
 		}
 	},
 	"include": [
-		"index.ts"
+		"index.ts",
+		"scripts"
 	],
 	"exclude": [
 		"node_modules"
