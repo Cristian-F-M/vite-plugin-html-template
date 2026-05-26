@@ -29,8 +29,14 @@ export default function htmlTemplate(
 		transformIndexHtml(code) {
 			const root = parse(code)
 			const xTemplates = root.querySelectorAll(tag)
+			const sortedXTemplates = xTemplates.sort((a, b) => {
+				const hasATemplate = a.closest('template') !== null
+				const hasBTemplate = b.closest('template') !== null
 
-			for (const xTemplate of xTemplates) {
+				return Number(hasBTemplate) - Number(hasATemplate)
+			})
+
+			for (const xTemplate of sortedXTemplates) {
 				const { attributes } = xTemplate
 				const templateId = attributes['data-template-id']
 
