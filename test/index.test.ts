@@ -332,4 +332,40 @@ describe('HTML template vite plugin', () => {
 		</template>
 `)
 	})
+
+	it('It must work with a <x-template> tag within a <template> tag', async () => {
+		const html = `
+		<x-template data-template-id="button-template" data-text="loading"></x-template>
+
+		<template id="button-template">
+			<button type="button"><x-template data-template-id="loader-template"></x-template>{text}</button>
+		</template>
+
+		<template id="loader-template">
+			<div class="loader"></div>
+		</template>
+		`
+
+		const output = await runOnViteServer(async (server) => {
+			return await server.transformIndexHtml('/', html)
+		})
+
+		await expect(output).toContainHTML(`
+		<button type="button">
+			<div class="loader"></div>
+			loading
+		</button>
+
+		<template id="button-template">
+			<button type="button">
+				<div class="loader"></div>
+				{text}
+			</button>
+		</template>
+
+		<template id="loader-template">
+			<div class="loader"></div>
+		</template>
+`)
+	})
 })
