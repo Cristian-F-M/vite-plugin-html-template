@@ -9,7 +9,7 @@ function formatHtml(h: string) {
 }
 
 expect.extend({
-	toContainHTML(received, expected) {
+	toContainHTML(received: string, expected: string) {
 		function cleanHTML(html: string) {
 			return html
 				.replace(/<head>[\s\S]*?<\/head>/gi, '')
