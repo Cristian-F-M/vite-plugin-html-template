@@ -1,4 +1,12 @@
+import { html } from 'js-beautify'
 import { expect } from 'vitest'
+
+function formatHtml(h: string) {
+	return html(h, {
+		indent_size: 2,
+		preserve_newlines: false
+	})
+}
 
 expect.extend({
 	toContainHTML(received, expected) {
@@ -16,13 +24,19 @@ expect.extend({
 
 		const pass = receivedCleaned.includes(expectedCleaned)
 
-		if (pass) return { message: () => ``, pass: true }
+		if (pass) {
+			return {
+				message: () =>
+					`Expected received HTML not to contain:\n${formatHtml(expectedCleaned)}`,
+				pass: true
+			}
+		}
 
 		return {
-			message: () => `Received HTML does not contains expected HTML`,
+			message: () => `Expected received HTML to contain expected HTML`,
 			pass: false,
-			expected: expectedCleaned,
-			actual: receivedCleaned
+			expected: formatHtml(expectedCleaned),
+			actual: formatHtml(receivedCleaned)
 		}
 	}
 })
